@@ -1,0 +1,21 @@
+<idea-plugin>
+    <id>cn.codepod.tool.markdown.image</id>
+    <name>Markdown Image Tool</name>
+    <vendor>None</vendor>
+
+    <description><![CDATA[
+    This is a plugin for upload image in markdown.<br>
+    ]]></description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>
