@@ -7,15 +7,53 @@
     This is a plugin for upload image in markdown.<br>
     ]]></description>
 
-    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
-         on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <applicationConfigurable
+                parentId="tools"
+                instance="cn.codepod.tool.config.SettingsConfigurable"
+                nonDefaultProject="false"/>
+
+        <applicationService
+                serviceImplementation="cn.codepod.tool.service.SettingStateService"/>
+
+        <customPasteProvider
+                implementation="cn.codepod.tool.editor.ClipboardPasteProvider"/>
+
+        <customFileDropHandler
+                order="first"
+                implementation="cn.codepod.tool.editor.FileDropAction"/>
+
+        <notificationGroup
+                displayType="BALLOON"
+                id="cn.codepod.tool.notification"/>
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
+        <group
+                id="cn.codepod.tool.editor.EditorPopupMenuGroup"
+                popup="true"
+                text="Markdown Image Tool"
+                class="cn.codepod.tool.editor.EditorPopupMenuGroup"
+        >
+            <add-to-group
+                    anchor="first"
+                    group-id="EditorPopupMenu"/>
+
+            <action
+                    id="cn.codepod.tool.editor.MarkdownImageDeleteAction"
+                    text="Delete"
+                    class="cn.codepod.tool.editor.MarkdownImageDeleteAction">
+                <!--                <keyboard-shortcut first-keystroke="DELETE" keymap="$default"/>-->
+            </action>
+
+            <action
+                    id="cn.codepod.tool.editor.MarkdownImageRenameAction"
+                    text="Rename"
+                    class="cn.codepod.tool.editor.MarkdownImageRenameAction">
+                <!--                <keyboard-shortcut first-keystroke="DELETE" keymap="$default"/>-->
+            </action>
+        </group>
     </actions>
 </idea-plugin>

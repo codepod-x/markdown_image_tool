@@ -1,42 +1,63 @@
 package cn.codepod.tool.config;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import cn.codepod.tool.config.component.SettingConfigComponent;
+import cn.codepod.tool.entity.SettingConfig;
+import cn.codepod.tool.service.SettingStateService;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.util.NlsContexts;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class PluginSettingsConfigurable implements SearchableConfigurable {
+/**
+ * @author zhanglei
+ */
+public class SettingsConfigurable implements SearchableConfigurable {
 
-    public PluginSettingsConfigurable() {
+    private SettingConfigComponent component;
+
+    public SettingsConfigurable() {
     }
 
     @Override
     public @NotNull @NonNls String getId() {
-        return null;
+        return "cn.codepod.tool.config.SettingsConfigurable";
     }
 
     @Override
-    public @NlsContexts.ConfigurableName String getDisplayName() {
-        return null;
+    public String getDisplayName() {
+        return "Markdown Image Tool";
     }
 
     @Override
     public @Nullable JComponent createComponent() {
-        return null;
+        component = new SettingConfigComponent();
+        return component.getMainPanel();
     }
 
     @Override
     public boolean isModified() {
-        return false;
+        SettingConfig state = SettingStateService.getInstance().getState();
+        SettingConfig config = new SettingConfig();
+        config.applyConfig(component);
+        return !config.equals(state);
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
+        SettingConfig state = SettingStateService.getInstance().getState();
+        state.applyConfig(component);
+    }
 
+    @Override
+    public void reset() {
+        SettingConfig state = SettingStateService.getInstance().getState();
+        component.applyConfig(state);
+    }
+
+    @Override
+    public void disposeUIResources() {
+        component = null;
     }
 }
