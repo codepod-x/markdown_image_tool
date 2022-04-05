@@ -29,20 +29,16 @@ public abstract class MarkdownImageAction extends AnAction {
             Caret caret = editor.getCaretModel().getCurrentCaret();
             caret.selectLineAtCaret();
             String selectedText = caret.getSelectedText();
-            int offset = caret.getOffset();
             if (StringUtil.isEmpty(selectedText)) {
-                caret.setSelection(offset, offset);
                 return;
             }
             MarkdownImage markdownImage = MarkdownUtil.getMarkDownImage(selectedText);
 
             if (markdownImage == null) {
-                caret.setSelection(offset, offset);
                 return;
             }
             imageProcess(event, editor, caret, markdownImage);
         } catch (Exception e) {
-            e.printStackTrace();
             NotificationUtil.show(NotificationType.ERROR, "An error happened: " + e.getMessage());
         }
     }

@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,35 +27,30 @@ public class OssUtil {
     private static SettingConfig config;
 
     public static OSS getOssClient() {
-        config = SettingStateService.getInstance().getState();
+        checkConfig();
         return new OSSClientBuilder()
                 .build(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
     }
 
     public static String upload(@NotNull File file, @Nullable String markdownFileName) {
 
-        OSS ossClient = getOssClient();
-
         String fileName = file.getName();
 
-        String filenameAfterFormat = formatFilename(fileName, markdownFileName);
-
-        String uploadPath = filenameAfterFormat;
-
-        if (StringUtil.startsWithChar(uploadPath, '/')) {
-            uploadPath = uploadPath.substring(1);
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            return upload(inputStream, fileName, markdownFileName);
+        } catch (IOException e) {
+            throw new RuntimeException("File read error.");
         }
-
-        ossClient.putObject(config.getBucketName(), uploadPath, file);
-        MarkdownImage markdownImage = MarkdownImage.of(fileName, generateUrl(filenameAfterFormat));
-        return markdownImage.getFull();
     }
 
     public static String upload(@NotNull InputStream input, @Nullable String markdownFileName) {
+        String fileName = "UNKNOWN" + DateTimeFormatter.ofPattern("_HH_mm_ss").format(LocalDateTime.now()) + ".png";
+        return upload(input, fileName, markdownFileName);
+    }
+
+    private static String upload(@NotNull InputStream input, @NotNull String fileName, @Nullable String markdownFileName) {
 
         OSS ossClient = getOssClient();
-
-        String fileName = "UNKNOWN" + DateTimeFormatter.ofPattern("_HH_mm_ss").format(LocalDateTime.now()) + ".png";
 
         String filenameAfterFormat = formatFilename(fileName, markdownFileName);
 
@@ -76,7 +73,7 @@ public class OssUtil {
     }
 
     public static String getOssKey(String key) {
-        config = SettingStateService.getInstance().getState();
+        checkConfig();
         key = key.replace(getPrefix(), "");
         key = key.replace(getSuffix(), "");
         if (StringUtil.startsWithChar(key, '/')) {
@@ -137,5 +134,26 @@ public class OssUtil {
         }
         ossClient.copyObject(config.getBucketName(), ossKey, config.getBucketName(), newName);
         return generateUrl(newName);
+    }
+
+    private static void checkConfig() {
+        if (config == null) {
+            config = SettingStateService.getInstance().getState();
+        }
+        if (StringUtil.isEmpty(config.getEndpoint())) {
+            throw new RuntimeException("endpoint is invalid.");
+        }
+        if (StringUtil.isEmpty(config.getAccessKeyId())) {
+            throw new RuntimeException("accessKeyId is invalid.");
+        }
+        if (StringUtil.isEmpty(config.getAccessKeySecret())) {
+            throw new RuntimeException("accessKeySecret is invalid.");
+        }
+        if (StringUtil.isEmpty(config.getBucketName())) {
+            throw new RuntimeException("bucketName is invalid.");
+        }
+        if (StringUtil.isEmpty(config.getFilenameFormat())) {
+            throw new RuntimeException("filenameFormat is invalid.");
+        }
     }
 }

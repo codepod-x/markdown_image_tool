@@ -4,8 +4,32 @@
     <vendor>None</vendor>
 
     <description><![CDATA[
-    This is a plugin for upload image in markdown.<br>
+    <h1>Markdown Image Tool</h1>
+    <p>
+        A tool that automatically uploads images inserted into markdown to Alibaba cloud OSS.
+        <p>Features:</p>
+        <ul>
+            <li>Automatically generate markdown image tag.</li>
+            <li>Directly drag one or more image files to markdown.</li>
+            <li>Paste the picture on the clipboard.</li>
+            <li>Right click the current line of the picture to rename and delete the picture file, and the changes will be synchronized in OSS.</li>
+        </ul>
+        </p>
+        <hr/>
+        <p>
+        一个自动将插入 Markdown 的图片上传至阿里云 OSS 的工具。
+        <p>特性：</p>
+        <ul>
+            <li>自动生成 markdown 图片标签。</li>
+            <li>直接拖拽一个或多个图片文件到 markdown。</li>
+            <li>粘贴剪切板上的图片。</li>
+            <li>在图片的当前行点击鼠标右键，可以对图片文件的重命名和删除，OSS 中也会同步变更。</li>
+        </ul>
+    </p>
+    <hr/>
     ]]></description>
+
+    <idea-version since-build="193"/>
 
     <depends>com.intellij.modules.platform</depends>
 
@@ -35,6 +59,7 @@
                 id="cn.codepod.tool.editor.EditorPopupMenuGroup"
                 popup="true"
                 text="Markdown Image Tool"
+                icon="cn.codepod.tool.icon.MarkdownIcons.DEFAULT"
                 class="cn.codepod.tool.editor.EditorPopupMenuGroup"
         >
             <add-to-group
@@ -42,18 +67,25 @@
                     group-id="EditorPopupMenu"/>
 
             <action
-                    id="cn.codepod.tool.editor.MarkdownImageDeleteAction"
-                    text="Delete"
-                    class="cn.codepod.tool.editor.MarkdownImageDeleteAction">
-                <!--                <keyboard-shortcut first-keystroke="DELETE" keymap="$default"/>-->
+                    id="cn.codepod.tool.editor.MarkdownImageRenameAction"
+                    text="Rename"
+                    icon="cn.codepod.tool.icon.MarkdownIcons.RENAME"
+                    class="cn.codepod.tool.editor.MarkdownImageRenameAction">
             </action>
 
             <action
-                    id="cn.codepod.tool.editor.MarkdownImageRenameAction"
-                    text="Rename"
-                    class="cn.codepod.tool.editor.MarkdownImageRenameAction">
-                <!--                <keyboard-shortcut first-keystroke="DELETE" keymap="$default"/>-->
+                    id="cn.codepod.tool.editor.MarkdownImageDeleteAction"
+                    text="Delete"
+                    icon="cn.codepod.tool.icon.MarkdownIcons.DELETE"
+                    class="cn.codepod.tool.editor.MarkdownImageDeleteAction">
             </action>
         </group>
     </actions>
+    <change-notes><![CDATA[
+        <p>0.0.1：2022/04/05</p>
+        <ul>
+            <li>First Version</li>
+        </ul>
+        <hr/>
+    ]]></change-notes>
 </idea-plugin>

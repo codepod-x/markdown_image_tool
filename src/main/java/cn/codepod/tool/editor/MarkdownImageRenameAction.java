@@ -28,7 +28,6 @@ public class MarkdownImageRenameAction extends MarkdownImageAction {
 
         String filename = ossKey;
 
-        int offset = caret.getOffset();
 
         int index = ossKey.lastIndexOf('/');
         if (index != -1) {
@@ -39,7 +38,6 @@ public class MarkdownImageRenameAction extends MarkdownImageAction {
 
         if (StringUtil.isEmpty(newName) || filename.equals(newName)) {
             NotificationUtil.show("The input name is invalid.");
-            caret.setSelection(offset, offset);
             return;
         }
 

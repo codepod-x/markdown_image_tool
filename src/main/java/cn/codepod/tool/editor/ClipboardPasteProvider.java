@@ -64,20 +64,24 @@ public class ClipboardPasteProvider implements PasteProvider {
             return;
         }
 
-
-        try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
+        ByteArrayOutputStream os = null;
+        InputStream is = null;
+        try {
+            os = new ByteArrayOutputStream();
             ImageIO.write(imageToPaste, "png", os);
-            InputStream is = new ByteArrayInputStream(os.toByteArray());
+            is = new ByteArrayInputStream(os.toByteArray());
+            os.close();
             Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
             String markdownFileName = MarkdownUtil.getMarkdownFileName(editor, false);
             String markdownImageText = OssUtil.upload(is, markdownFileName);
+            is.close();
             NotificationUtil.show(NotificationType.INFORMATION, "File from clipboard is uploaded.");
             if (editor != null) {
                 Caret caret = editor.getCaretModel().getCurrentCaret();
                 Document document = editor.getDocument();
                 WriteCommandAction.runWriteCommandAction(editor.getProject(), null, null, () -> {
-                    document.insertString(caret.getOffset(), markdownImageText);
-                    caret.moveToOffset(caret.getOffset() + markdownImageText.length());
+                    document.insertString(caret.getOffset(), markdownImageText + '\n');
+                    caret.moveToOffset(caret.getOffset() + markdownImageText.length() + 1);
                 });
             } else {
                 Messages.showInfoMessage("File is Uploaded, but insert text is failed.", "Markdown Image Tool");
@@ -86,6 +90,17 @@ public class ClipboardPasteProvider implements PasteProvider {
             NotificationUtil.show(NotificationType.ERROR, "Failed to trans image to stream.");
         } catch (OSSException e) {
             NotificationUtil.show(NotificationType.ERROR, "Failed to upload.");
+        } finally {
+            try {
+                if (os != null) {
+                    os.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                // just skip
+            }
         }
 
     }

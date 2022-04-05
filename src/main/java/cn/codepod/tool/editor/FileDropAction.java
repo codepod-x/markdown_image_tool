@@ -54,8 +54,8 @@ public class FileDropAction extends CustomFileDropHandler {
             WriteCommandAction.runWriteCommandAction(project, null, null, () -> {
                 for (File file : fileList) {
                     String markdownImageText = OssUtil.upload(file, markdownFileName);
-                    document.insertString(caret.getOffset(), markdownImageText);
-                    caret.moveToOffset(caret.getOffset() + markdownImageText.length());
+                    document.insertString(caret.getOffset(), markdownImageText + '\n');
+                    caret.moveToOffset(caret.getOffset() + markdownImageText.length() + 1);
                     NotificationUtil.show(NotificationType.INFORMATION, String.format("File: %s is uploaded.", file.getName()));
                 }
             });

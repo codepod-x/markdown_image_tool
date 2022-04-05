@@ -19,6 +19,10 @@ public class SettingConfig {
     public SettingConfig() {
         this.filenameFormat = "image/{DATE}_{MD_NAME}_{PIC_NAME}";
         this.endpoint = "oss-cn-chengdu.aliyuncs.com";
+        this.accessKeyId = "";
+        this.accessKeySecret = "";
+        this.bucketName = "";
+        this.styleSuffix = "";
         this.enable = false;
     }
 
