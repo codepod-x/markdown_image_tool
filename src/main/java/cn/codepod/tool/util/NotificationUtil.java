@@ -15,7 +15,7 @@ public class NotificationUtil {
     public static void show(NotificationType type, String content) {
         Notification notification = NotificationGroupManager.getInstance()
                 .getNotificationGroup("cn.codepod.tool.notification")
-                .createNotification("Markdown image tool", content, type)
+                .createNotification("Markdown image tool", content, type, null)
                 .setIcon(MarkdownIcons.DEFAULT);
         Notifications.Bus.notify(notification);
     }

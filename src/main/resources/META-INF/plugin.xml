@@ -29,7 +29,7 @@
     <hr/>
     ]]></description>
 
-    <idea-version since-build="193"/>
+    <idea-version since-build="203"/>
 
     <depends>com.intellij.modules.platform</depends>
 
@@ -85,6 +85,11 @@
         <p>0.0.1：2022/04/05</p>
         <ul>
             <li>First Version</li>
+        </ul>
+        <hr/>
+        <p>0.0.2：2022/04/06</p>
+        <ul>
+            <li>Update Compatibility Range</li>
         </ul>
         <hr/>
     ]]></change-notes>
